@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>login page</title>
+    <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+            background-image: url("D:\istockphoto.jpg");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+        #header {
+            background-color: rgba(247, 204, 164, 0.445);
+            color: white;
+            display: flex;
+            justify-content: center;
+            display: flex;
+            justify-content: space-between;
+        }
+        a{
+            text-decoration: none;
+            color: black;
+            align-items: center;
+            display: flex;
+            justify-content: center;
+        }
+        #footer {
+            background-color: rgba(247, 204, 164, 0.445);
+            color: white;
+            display: flex;
+            justify-content: center;
+            margin-top: 450px;
+        }
+        #forms{
+            display: flex;
+            align-items: center;
+            justify-content:center;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header">
+        <h1>Todo tasks</h1>
+        <a href="index.html">sign up</a>
+    </div>
+    <div id="forms">
+    <form>
+        <label for="useremail">UserEmail:</label>
+        <input type="email" placeholder="entr your emailId" id="useremail"></br>
+        <label for="password"> Password  :</label>
+        <input type="=" password" placeholder="enter your password" id="password"> </br>
+        <button id="login">login</button></form></br>
+        
+    </form></div>
+    <div id="footer">
+        <h1>Thank you!</h1>
+    </div>
+</body>
+<script>
+    var useremail = document.getElementById("useremail");
+    var password = document.getElementById("password");
+    var loginBtn = document.getElementById("login");
+
+    loginBtn.addEventListener('click', async function (e) {
+        e.preventDefault();
+        var data = {
+            useremail: useremail.value,
+            password: password.value,
+        }
+        console.log("data", data)
+        var url = "http://localhost:8081/login";
+
+        await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+
+        })
+
+            .then(Response => {
+                if (Response.status === 200) {
+                    return Response.json()
+                }
+                else if (Response.status === 201) {
+                    alert("Email/Passwords deosnt match")
+                }
+            })
+            .then(data => {
+                localStorage.setItem("userInfo", JSON.stringify(data))
+                var info = JSON.parse(localStorage.getItem("userInfo"));
+                console.log(info, info.length)
+                if (info.length > 0) {
+                    window.location.href = "todo.html"
+                }
+            })
+
+            .catch(err => {
+                console.log(err)
+            })
+
+    })
+    
+</script>
+
+</html>

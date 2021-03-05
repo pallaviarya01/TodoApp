@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        getTodo
+    </title>
+    <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+            background-image: url("D:\istockphoto.jpg");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        #header {
+            background-color: rgba(247, 204, 164, 0.445);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #footer {
+            background-color: rgba(247, 204, 164, 0.445);
+            color: white;
+            display: flex;
+            justify-content: center;
+            margin-top: 430px;
+        }
+        #todoList{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-direction: column;
+            margin-top: 40px;
+            background-color: rgba(145, 139, 139, 0.473);
+            width: 50%;
+            margin-left: 400px;
+
+        }
+        #single{
+            background-color: rgba(104, 102, 102, 0.178);
+            width: 70%;
+            color: rgb(94, 86, 75);
+        }
+        a {
+            text-decoration: none;
+            color: white;
+        }
+        #to{
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            color: rgba(88, 83, 72, 0.459);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header">
+        <div id="logo"><h1> Todo List</h1></div>
+        <div id="links"><a href="todo.html">create todo</a>
+        <button id="logout">logout</button></div>
+        
+    </div>
+    <div id="to"><h1>your todo list</h1></div>
+    <div id="todoList">
+        <div class="single">
+        <div id="Task">Task</div>
+        <div id="description">description</div>
+        <div id="deadline">deadline</div>
+    </div>
+    </div>
+    <div id="footer">
+        <h1>Thank you!</h1>
+    </div>
+
+</body>
+<script>
+    var user = JSON.parse(localStorage.getItem("userInfo"));
+    var email = user[0].email;
+    console.log("email", email)
+    todoList=document.getElementById("todoList")
+    var logout = document.getElementById("logout");
+
+    var url = "http://localhost:8081/getAlltodo/" + email;
+    console.log("url", url)
+    fetch(url)
+        .then(response => {
+            return response.json()
+        })
+        .then(data => {
+            console.log(data)
+            renderList(data);
+
+        })
+        .catch(err => {
+            console.log(err)
+        })
+
+        function renderList(data) {
+        var res = "";
+        for (let i = 0; i < data.length; i++) {
+            var newtodoList = data[i];
+            var html = '<div class="single">\
+               <div id="task">'+ data[i].task + '</div>\
+               <div id="description">'+data[i].description+'</div>\
+               <div id="deadline">'+data[i].deadline+'</div>\
+            </div>';
+            res += html;
+
+        }
+        todoList.innerHTML = res;
+        console.log("TodoList=", todoList)
+
+    }
+    logout.addEventListener('click',  function (e) {
+        e.preventDefault();
+        localStorage.removeItem("userInfo");
+        window.location.href="index.html"
+    
+    })
+
+</script>
+
+</html>

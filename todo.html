@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Todo List</title>
+    <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+            background-image: url("D:\istockphoto.jpg");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+
+        }
+
+        #header {
+            background-color: rgba(247, 204, 164, 0.445);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #footer {
+            background-color: rgba(247, 204, 164, 0.445);
+            color: white;
+            display: flex;
+            justify-content: center;
+            margin-top: 350px;
+        }
+
+        #tasks {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            width: 300px;
+            margin-left: 600px;
+            margin-top: 30px;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header">
+        <div id="logo"><h1>Create your TodoList</h1></div>
+       <div id="links"><a href="getTodo.html">getTodo</a>
+        <button id="logout">logout</button></div> 
+    </div>
+    <div id="tasks">
+        <label for="task">Task:</label>
+        <input type="text" placeholder="Enter the task to your to do list" id="task"></br>
+        <label for="description">Description:</label>
+        <input typ="text" placeholder="describe about your task" id="description"></br>
+        <label for="deadline">task deadline:</label>
+        <input type="date" placeholder="enter the deadline date" id="deadline"></br>
+        <button id="add">addTask</button>
+        
+
+    </div>
+    <div id="footer">
+        <h1>Thank you!</h1>
+    </div>
+</body>
+<script>
+    var task = document.getElementById("task");
+    var description = document.getElementById("description")
+    var deadline = document.getElementById("deadline")
+    var addTaskBtn = document.getElementById("add");
+    var logout = document.getElementById("logout");
+
+
+
+    addTaskBtn.addEventListener('click', async function (e) {
+        e.preventDefault();
+
+        var user = JSON.parse(localStorage.getItem("userInfo"));
+        var email = user[0].email;
+
+        var data = {
+            task: task.value,
+            description: description.value,
+            deadline: deadline.value,
+            userEmail: email
+        }
+        console.log("data=", data);
+
+        var url = "http://localhost:8081/todo"
+
+        await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                console.log(response.json())
+            })
+            .catch(err => {
+                console.log(err)
+            })
+
+        task.value = "",
+            description.value = "",
+            deadline.value = ""
+
+    })
+
+    logout.addEventListener('click',  function (e) {
+        e.preventDefault();
+        localStorage.removeItem("userInfo");
+        window.location.href="index.html"
+    
+    })
+</script>
+
+</html>

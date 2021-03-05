@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>expressjs</title>
+    <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+            background-image: url("D:\istockphoto.jpg");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        #header {
+            background-color: rgba(247, 204, 164, 0.445);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+        }
+        a{
+            text-decoration: none;
+            color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #footer {
+            background-color: rgba(247, 204, 164, 0.445);
+            color: white;
+            display: flex;
+            justify-content: center;
+            margin-top: 330px;
+        }
+
+        /* #entry
+        {
+            margin-top: 40px;
+            display:flex;
+            justify-content: center;
+            flex-direction: column;
+        } */
+        #forms {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            width: 300px;
+            margin-left: 600px;
+            margin-top: 40px;
+        }
+
+        #loginlink {
+            color: rgb(3, 3, 3);
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header">
+        <h1> Todo List</h1>
+        <a href="login.html">login</a>
+    </div>
+    <div id="entry">
+        <form id="forms">
+            <label for="name1">Name:</label>
+            <input type="text" placeholder:"Enter your name" id="name1">
+            <label for="contactNo">MobileNo:</label>
+            <input type="tel" placeholder:"Enter your mobile no" id="contactNo">
+            <label for="email">emailId:</label>
+            <input type="email" placeholder:"Enter your emailID" id="email">
+            <label for="password">Password:</label>
+            <input type="password" placeholder:"Enter your password" id="password"><br>
+            <button id="signUp">signUp</button>
+            
+        </form>
+        <div id="footer">
+            <h1>Thank you!</h1>
+        </div>
+    </div>
+</body>
+<script>
+    var name1 = document.getElementById("name1");
+    var contactNo = document.getElementById("contactNo");
+    var email = document.getElementById("email");
+    var password = document.getElementById("password");
+    var signUp = document.getElementById("signUp")
+    var login = document.getElementById("login")
+
+    signUp.addEventListener('click', async function (e) {
+        e.preventDefault();
+        var data = {
+            name: name1.value,
+            contactNo: contactNo.value,
+            email: email.value,
+            password: password.value
+        }
+        console.log("data=", data);
+
+        var url = "http://localhost:8081/signUp"
+        await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+
+            .then(Response => {
+                console.log(Response)
+                if (Response.status === 200) {
+                    return Response.json()
+                }
+                else if (Response.status === 201) {
+                    alert("user alredy exists")
+
+                }
+            })
+
+            .then(data => {
+                console.log(data)
+                localStorage.setItem("userInfo", JSON.stringify(data))
+                var info = JSON.parse(localStorage.getItem("userInfo"));
+                console.log(info, info.length)
+                if (info.length > 0) {
+                    window.location.href = "todo.html"
+                }
+            })
+
+            .catch(err => {
+                console.log(err)
+            })
+    })
+</script>
+
+</html>
